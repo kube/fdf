@@ -6,7 +6,7 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/16 21:58:14 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/19 18:46:14 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/19 20:53:39 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ typedef	struct			s_env
 	void				*mlx;
 	void				*win;
 	void				*img;
+	int					bpp;
+	int					size_line;
+	int					*data;
 }						t_env;
 
 typedef	union
@@ -62,7 +65,7 @@ typedef	union
 	};
 }						u_grad;
 
-void		draw_vector(t_env env, t_vector *vect, int color1, int color2);
+void		draw_vector(t_env *env, t_vector *vect, int color1, int color2);
 int			blend_colors(int color1, int color2, float coeff);
 
 #endif

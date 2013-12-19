@@ -6,11 +6,16 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/18 17:27:34 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/19 19:06:42 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/19 20:55:01 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+
+static void	pixel_to_image(int *data, int x, int y, int color)
+{
+	data[y * WIN_WIDTH + x] = color;
+}
 
 static void	swap_points(t_point **a, t_point **b, u_grad *grad)
 {
@@ -25,7 +30,7 @@ static void	swap_points(t_point **a, t_point **b, u_grad *grad)
 	grad->color1 = cache_color;
 }
 
-static void	draw_loop_x(t_env env, t_point *start, t_point *end, u_grad grad)
+static void	draw_loop_x(int *data, t_point *start, t_point *end, u_grad grad)
 {
 	float	derivative;
 	float	proportion;
@@ -37,14 +42,14 @@ static void	draw_loop_x(t_env env, t_point *start, t_point *end, u_grad grad)
 	while ((int)current.x != (int)end->x)
 	{
 		proportion = (current.x - start->x) / (end->x - start->x);
-		mlx_pixel_put(env.mlx, env.win, current.x, current.y,
+		pixel_to_image(data, current.x, current.y,
 				blend_colors(grad.color1, grad.color2, proportion));
 		current.x = current.x + 1;
 		current.y = current.y + derivative;
 	}
 }
 
-static void	draw_loop_y(t_env env, t_point *start, t_point *end, u_grad grad)
+static void	draw_loop_y(int *data, t_point *start, t_point *end, u_grad grad)
 {
 	float	derivative;
 	float	proportion;
@@ -56,14 +61,14 @@ static void	draw_loop_y(t_env env, t_point *start, t_point *end, u_grad grad)
 	while ((int)current.y != (int)end->y)
 	{
 		proportion = (current.y - start->y) / (end->y - start->y);
-		mlx_pixel_put(env.mlx, env.win, current.x, current.y,
+		pixel_to_image(data, current.x, current.y,
 				blend_colors(grad.color1, grad.color2, proportion));
 		current.x = current.x + derivative;
 		current.y = current.y + 1;
 	}
 }
 
-void		draw_vector(t_env env, t_vector *v, int color1, int color2)
+void		draw_vector(t_env *env, t_vector *v, int color1, int color2)
 {
 	t_point	*start;
 	t_point	*end;
@@ -77,12 +82,12 @@ void		draw_vector(t_env env, t_vector *v, int color1, int color2)
 	{
 		if (v->b.y < v->a.y)
 			swap_points(&start, &end, &grad);
-		draw_loop_y(env, start, end, grad);
+		draw_loop_y(env->data, start, end, grad);
 	}
 	else
 	{
 		if (v->b.x < v->a.x)
 			swap_points(&start, &end, &grad);
-		draw_loop_x(env, start, end, grad);
+		draw_loop_x(env->data, start, end, grad);
 	}
 }

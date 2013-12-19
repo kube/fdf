@@ -6,7 +6,7 @@
 #    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2013/12/19 19:07:57 by cfeijoo          ###   ########.fr        #
+#    Updated: 2013/12/19 19:16:11 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS = -Wall -Werror -Wextra
 
 CC = gcc
 CFILES = main.c			\
-		 blend_color.c	\
+		 blend_colors.c	\
 		 draw_vector.c
 
 OFILES = $(CFILES:.c=.o)
