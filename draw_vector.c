@@ -6,7 +6,7 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/18 17:27:34 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/20 19:00:35 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/21 14:03:11 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	pixel_to_image(t_env *env, int x, int y, int color)
 {
-	if (WIN_WIDTH * y + x < WIN_WIDTH * WIN_HEIGHT && y > 0 && x > 0 && x < WIN_WIDTH)
+	if (WIN_WIDTH * y + x < WIN_WIDTH * WIN_HEIGHT && y >= 0 && x >= 0 && x < WIN_WIDTH)
 		env->data[WIN_WIDTH * y + x] = color;
 }
 
