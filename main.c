@@ -6,7 +6,7 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 05:01:28 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/21 19:14:22 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/21 23:35:36 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,10 @@ static void		rotate_z_axis(t_vector *cache, float angle_z)
 	t_point		a;
 	t_point		b;
 
-	// Cache
 	a.x = cache->a->x;
 	a.y = cache->a->y;
 	b.x = cache->b->x;
 	b.y = cache->b->y;
-
-	// Rotation
 	cache->a->x = a.x * cos(angle_z) - a.y * sin(angle_z);
 	cache->a->y = a.x * sin(angle_z) + a.y * cos(angle_z);
 	cache->b->x = b.x * cos(angle_z) - b.y * sin(angle_z);
@@ -37,13 +34,10 @@ static void		rotate_x_axis(t_vector *cache, float angle_x)
 	t_point		a;
 	t_point		b;
 
-	// Cache
 	a.y = cache->a->y;
 	a.z = cache->a->z;
 	b.y = cache->b->y;
 	b.z = cache->b->z;
-
-	// Rotation
 	cache->a->y = a.y * sin(angle_x) + a.z * cos(angle_x);
 	cache->a->z = a.y * cos(angle_x) - a.z * sin(angle_x);
 	cache->b->y = b.y * sin(angle_x) + b.z * cos(angle_x);
@@ -55,13 +49,10 @@ static void		rotate_y_axis(t_vector *cache, float angle_y)
 	t_point		a;
 	t_point		b;
 
-	// Cache
 	a.x = cache->a->x;
 	a.z = cache->a->z;
 	b.x = cache->b->x;
 	b.z = cache->b->z;
-
-	// Rotation
 	cache->a->x = a.z * sin(angle_y) + a.x * cos(angle_y);
 	cache->a->z = a.z * cos(angle_y) - a.x * sin(angle_y);
 	cache->b->x = b.z * sin(angle_y) + b.x * cos(angle_y);
@@ -70,17 +61,14 @@ static void		rotate_y_axis(t_vector *cache, float angle_y)
 
 static void		translation(t_vector *cache, int left, int top)
 {
-	// Translation
 	cache->a->x += left;
 	cache->a->y += top;
 	cache->b->x += left;
 	cache->b->y += top;	
-
 }
 
 static void		scale(t_vector *cache, float coeff)
 {
-	// Scale
 	cache->a->x *= coeff;
 	cache->a->y *= coeff;
 	cache->a->z *= coeff;
@@ -108,7 +96,6 @@ static void		hide(t_env *env, float coeff)
 	{
 		if (env->data[i])
 			env->data[i] = blend_colors(env->data[i], 0x000000, coeff);
-
 		i++;
 	}
 }
@@ -230,8 +217,11 @@ int				main(void)
 
 
 
-		// bzero(env.data, WIN_WIDTH * WIN_HEIGHT * 4);
-		hide(&env, 0.01);
+		bzero(env.data, WIN_WIDTH * WIN_HEIGHT * 4);
+		(void)hide;
+		(void)rotate_y_axis;
+		(void)rotate_x_axis;
+		// hide(&env, 0.01);
 
 
 
@@ -341,8 +331,8 @@ int				main(void)
 
 		mlx_put_image_to_window(env.mlx, env.win, env.img, 0, 0);
 		angle += 0.04;
-		decalage += 0.1;
-		// usleep(4000);
+		decalage += 0.9;
+		usleep(90000);
 		// mlx_loop(env.mlx);
 	}
 	return (0);

@@ -6,16 +6,21 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/18 17:27:34 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/21 14:03:11 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/21 23:33:03 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
 
-static void	pixel_to_image(t_env *env, int x, int y, int color)
+static void	pixel_to_image(t_env *env, t_point a, int color, float opacity)
 {
-	if (WIN_WIDTH * y + x < WIN_WIDTH * WIN_HEIGHT && y >= 0 && x >= 0 && x < WIN_WIDTH)
-		env->data[WIN_WIDTH * y + x] = color;
+	int		i;
+
+	i = WIN_WIDTH * (int)a.y + (int)a.x;
+	if (i < WIN_WIDTH * WIN_HEIGHT && (int)a.y >= 0 && (int)a.x >= 0 && (int)a.x < WIN_WIDTH)
+	{
+		env->data[i] = blend_colors(env->data[i], color, opacity);
+	}
 }
 
 static void	swap_points(t_point **a, t_point **b, u_grad *grad)
@@ -43,8 +48,14 @@ static void	draw_loop_x(t_env *env, t_point *start, t_point *end, u_grad grad)
 	while ((int)current.x <= (int)end->x)
 	{
 		proportion = (current.x - start->x) / (end->x - start->x);
-		pixel_to_image(env, current.x, current.y,
-				blend_colors(grad.color1, grad.color2, proportion));
+		pixel_to_image(env, current,
+				blend_colors(grad.color1, grad.color2, proportion),
+				current.y - (int)current.y);
+		current.y--;
+		pixel_to_image(env, current,
+				blend_colors(grad.color1, grad.color2, proportion),
+				1 - (current.y - (int)current.y));
+		current.y++;
 		current.x = current.x + 1;
 		current.y = current.y + derivative;
 	}
@@ -62,8 +73,14 @@ static void	draw_loop_y(t_env *env, t_point *start, t_point *end, u_grad grad)
 	while ((int)current.y <= (int)end->y)
 	{
 		proportion = (current.y - start->y) / (end->y - start->y);
-		pixel_to_image(env, current.x, current.y,
-				blend_colors(grad.color1, grad.color2, proportion));
+		pixel_to_image(env, current,
+				blend_colors(grad.color1, grad.color2, proportion),
+				current.x - (int)current.x);
+		current.x--;
+		pixel_to_image(env, current,
+				blend_colors(grad.color1, grad.color2, proportion),
+				1 - (current.x - (int)current.x));
+		current.x++;
 		current.x = current.x + derivative;
 		current.y = current.y + 1;
 	}
