@@ -6,76 +6,11 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 05:01:28 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/21 23:35:36 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/22 16:28:44 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
-#include <math.h>
-#include <strings.h>
-
-static void		rotate_z_axis(t_vector *cache, float angle_z)
-{
-	t_point		a;
-	t_point		b;
-
-	a.x = cache->a->x;
-	a.y = cache->a->y;
-	b.x = cache->b->x;
-	b.y = cache->b->y;
-	cache->a->x = a.x * cos(angle_z) - a.y * sin(angle_z);
-	cache->a->y = a.x * sin(angle_z) + a.y * cos(angle_z);
-	cache->b->x = b.x * cos(angle_z) - b.y * sin(angle_z);
-	cache->b->y = b.x * sin(angle_z) + b.y * cos(angle_z);
-}
-
-static void		rotate_x_axis(t_vector *cache, float angle_x)
-{
-	t_point		a;
-	t_point		b;
-
-	a.y = cache->a->y;
-	a.z = cache->a->z;
-	b.y = cache->b->y;
-	b.z = cache->b->z;
-	cache->a->y = a.y * sin(angle_x) + a.z * cos(angle_x);
-	cache->a->z = a.y * cos(angle_x) - a.z * sin(angle_x);
-	cache->b->y = b.y * sin(angle_x) + b.z * cos(angle_x);
-	cache->b->z = b.y * cos(angle_x) - b.z * sin(angle_x);
-}
-
-static void		rotate_y_axis(t_vector *cache, float angle_y)
-{
-	t_point		a;
-	t_point		b;
-
-	a.x = cache->a->x;
-	a.z = cache->a->z;
-	b.x = cache->b->x;
-	b.z = cache->b->z;
-	cache->a->x = a.z * sin(angle_y) + a.x * cos(angle_y);
-	cache->a->z = a.z * cos(angle_y) - a.x * sin(angle_y);
-	cache->b->x = b.z * sin(angle_y) + b.x * cos(angle_y);
-	cache->b->z = b.z * cos(angle_y) - b.x * sin(angle_y);
-}
-
-static void		translation(t_vector *cache, int left, int top)
-{
-	cache->a->x += left;
-	cache->a->y += top;
-	cache->b->x += left;
-	cache->b->y += top;	
-}
-
-static void		scale(t_vector *cache, float coeff)
-{
-	cache->a->x *= coeff;
-	cache->a->y *= coeff;
-	cache->a->z *= coeff;
-	cache->b->x *= coeff;
-	cache->b->y *= coeff;
-	cache->b->z *= coeff;
-}
 
 static void		load_vector(t_vector *cache, t_vector v)
 {
@@ -87,7 +22,20 @@ static void		load_vector(t_vector *cache, t_vector v)
 	cache->b->z = v.b->z;
 }
 
-static void		hide(t_env *env, float coeff)
+static void		fade(t_env *env, int color, float coeff)
+{
+	int			i;
+
+	i = 0;
+	while (i < WIN_WIDTH * WIN_HEIGHT)
+	{
+		if (env->data[i] != color)
+			env->data[i] = blend_colors(env->data[i], color, coeff);
+		i++;
+	}
+}
+
+static void		clear(t_env *env)
 {
 	int			i;
 
@@ -95,7 +43,7 @@ static void		hide(t_env *env, float coeff)
 	while (i < WIN_WIDTH * WIN_HEIGHT)
 	{
 		if (env->data[i])
-			env->data[i] = blend_colors(env->data[i], 0x000000, coeff);
+			env->data[i] = 0;
 		i++;
 	}
 }
@@ -215,22 +163,19 @@ int				main(void)
 		cache_vector.a = &cache1;
 		cache_vector.b = &cache2;
 
-
-
-		bzero(env.data, WIN_WIDTH * WIN_HEIGHT * 4);
-		(void)hide;
-		(void)rotate_y_axis;
-		(void)rotate_x_axis;
-		// hide(&env, 0.01);
-
-
+		(void)fade;
+		(void)clear;
+		// clear(&env);
+		// fade(&env, 0x000000, 0.09);
+		fade(&env, 0xFFFFFF, 0.09);
+		// fade(&env, rand() % 0xF0F0F0, 0.06);
 
 		load_vector(&cache_vector, vector1);
 		rotate_z_axis(&cache_vector, angle);
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFF0000, 0x00FFFF);
 		
 		load_vector(&cache_vector, vector2);
@@ -238,7 +183,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FFFF, 0x00FF00);
 		
 		load_vector(&cache_vector, vector3);
@@ -246,7 +191,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FF00, 0xFFFF00);
 		
 		load_vector(&cache_vector, vector4);
@@ -254,7 +199,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFFFF00, 0xFF0000);
 
 
@@ -266,7 +211,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFF0000, 0x00FFFF);
 		
 		load_vector(&cache_vector, vector6);
@@ -274,7 +219,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FFFF, 0x00FF00);
 		
 		load_vector(&cache_vector, vector7);
@@ -282,7 +227,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FF00, 0xFFFF00);
 		
 		load_vector(&cache_vector, vector8);
@@ -290,7 +235,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFFFF00, 0xFF0000);
 
 
@@ -301,7 +246,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFF0000, 0x00FFFF);
 		
 		load_vector(&cache_vector, vector10);
@@ -309,7 +254,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FFFF, 0x00FF00);
 		
 		load_vector(&cache_vector, vector11);
@@ -317,7 +262,7 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0x00FF00, 0xFFFF00);
 		
 		load_vector(&cache_vector, vector12);
@@ -325,14 +270,13 @@ int				main(void)
 		rotate_x_axis(&cache_vector, angle);
 		rotate_y_axis(&cache_vector, angle);
 		scale(&cache_vector, 100 - decalage);
-		translation(&cache_vector, 100 + decalage, 100 + decalage);
+		translation(&cache_vector, 100 + decalage, 100 + decalage, 0);
 		draw_vector(&env, cache_vector, 0xFFFF00, 0xFF0000);
 
 
 		mlx_put_image_to_window(env.mlx, env.win, env.img, 0, 0);
-		angle += 0.04;
+		angle += 0.04 + angle / 1000;
 		decalage += 0.9;
-		usleep(90000);
 		// mlx_loop(env.mlx);
 	}
 	return (0);

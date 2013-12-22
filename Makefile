@@ -6,29 +6,37 @@
 #    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2013/12/20 17:20:48 by cfeijoo          ###   ########.fr        #
+#    Updated: 2013/12/22 16:37:53 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-INCLUDEFOLDER = -I./includes/ -I./libft/includes/
+INCLUDEFOLDER = -I./includes/ -I./libft/includes/ -I./getNextLine/
 LIBFOLDER = -L/usr/X11/lib/ -L./libft/
 LIBS = -lmlx -lXext -lX11 -lft
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -O4
 
 CC = gcc
-CFILES = main.c			\
-		 blend_colors.c	\
+CFILES = main.c					\
+		 blend_colors.c			\
+		 transformations.c		\
+		 get_next_line.c		\
 		 draw_vector.c
 
 OFILES = $(CFILES:.c=.o)
 
-$(NAME) : clean
-	make -C libft/ re
+$(NAME) : 
 	$(CC) -c $(INCLUDEFOLDER) $(CFLAGS) $(CFILES)
 	$(CC) $(LIBFOLDER) $(LIBS) $(INCLUDEFOLDER) $(CFLAGS) $(OFILES) -o $(NAME)
 
+updatelib :
+	cd libft/ && git pull
+	make -C libft/ re
+
 clean :
-	if [ -f $(OFILES) ];	\
-		then rm $(OFILES);	\
-	fi
+	rm -f $(OFILES)
+
+fclean : clean
+	rm -f $(NAME)
+
+re : fclean $(NAME)

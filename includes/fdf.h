@@ -6,7 +6,7 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/16 21:58:14 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/21 01:21:59 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/22 16:37:49 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <libft.h>
-# include <stdio.h>
+# include <get_next_line.h>
+
+// Test libs
+# include <math.h>
 
 # define WIN_HEIGHT 920
 # define WIN_WIDTH 1220
@@ -68,5 +71,9 @@ typedef	union
 
 void		draw_vector(t_env *env, t_vector vect, int color1, int color2);
 int			blend_colors(int color1, int color2, float coeff);
-
+void		rotate_z_axis(t_vector *cache, float angle_z);
+void		rotate_x_axis(t_vector *cache, float angle_x);
+void		rotate_y_axis(t_vector *cache, float angle_y);
+void		translation(t_vector *cache, float x, float y, float z);
+void		scale(t_vector *cache, float coeff);
 #endif
