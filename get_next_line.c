@@ -6,11 +6,12 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/17 18:06:11 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 16:30:10 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/22 21:08:08 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <get_next_line.h>
+#include <fdf.h>
 
 static	t_read		*ft_freeread(t_read *red, t_read *prev, t_read **start)
 {

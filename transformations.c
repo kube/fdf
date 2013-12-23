@@ -6,7 +6,7 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/22 14:09:42 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 16:37:55 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/22 21:29:00 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void			rotate_z_axis(t_vector *cache, float angle_z)
 	a.y = cache->a->y;
 	b.x = cache->b->x;
 	b.y = cache->b->y;
-	cache->a->x = a.x * cos(angle_z) - a.y * sin(angle_z);
-	cache->a->y = a.x * sin(angle_z) + a.y * cos(angle_z);
-	cache->b->x = b.x * cos(angle_z) - b.y * sin(angle_z);
-	cache->b->y = b.x * sin(angle_z) + b.y * cos(angle_z);
+	cache->a->x = a.x * ft_cos(angle_z) - a.y * ft_sin(angle_z);
+	cache->a->y = a.x * ft_sin(angle_z) + a.y * ft_cos(angle_z);
+	cache->b->x = b.x * ft_cos(angle_z) - b.y * ft_sin(angle_z);
+	cache->b->y = b.x * ft_sin(angle_z) + b.y * ft_cos(angle_z);
 }
 
 void			rotate_x_axis(t_vector *cache, float angle_x)
@@ -36,10 +36,10 @@ void			rotate_x_axis(t_vector *cache, float angle_x)
 	a.z = cache->a->z;
 	b.y = cache->b->y;
 	b.z = cache->b->z;
-	cache->a->y = a.y * sin(angle_x) + a.z * cos(angle_x);
-	cache->a->z = a.y * cos(angle_x) - a.z * sin(angle_x);
-	cache->b->y = b.y * sin(angle_x) + b.z * cos(angle_x);
-	cache->b->z = b.y * cos(angle_x) - b.z * sin(angle_x);
+	cache->a->y = a.y * ft_sin(angle_x) + a.z * ft_cos(angle_x);
+	cache->a->z = a.y * ft_cos(angle_x) - a.z * ft_sin(angle_x);
+	cache->b->y = b.y * ft_sin(angle_x) + b.z * ft_cos(angle_x);
+	cache->b->z = b.y * ft_cos(angle_x) - b.z * ft_sin(angle_x);
 }
 
 void			rotate_y_axis(t_vector *cache, float angle_y)
@@ -51,10 +51,10 @@ void			rotate_y_axis(t_vector *cache, float angle_y)
 	a.z = cache->a->z;
 	b.x = cache->b->x;
 	b.z = cache->b->z;
-	cache->a->x = a.z * sin(angle_y) + a.x * cos(angle_y);
-	cache->a->z = a.z * cos(angle_y) - a.x * sin(angle_y);
-	cache->b->x = b.z * sin(angle_y) + b.x * cos(angle_y);
-	cache->b->z = b.z * cos(angle_y) - b.x * sin(angle_y);
+	cache->a->x = a.z * ft_sin(angle_y) + a.x * ft_cos(angle_y);
+	cache->a->z = a.z * ft_cos(angle_y) - a.x * ft_sin(angle_y);
+	cache->b->x = b.z * ft_sin(angle_y) + b.x * ft_cos(angle_y);
+	cache->b->z = b.z * ft_cos(angle_y) - b.x * ft_sin(angle_y);
 }
 
 void			translation(t_vector *cache, float x, float y, float z)

@@ -6,7 +6,7 @@
 #    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2013/12/22 16:37:53 by cfeijoo          ###   ########.fr        #
+#    Updated: 2013/12/22 23:43:47 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,10 @@ CC = gcc
 CFILES = main.c					\
 		 blend_colors.c			\
 		 transformations.c		\
+		 get_map_data.c			\
 		 get_next_line.c		\
+		 display_vector.c		\
+		 fade.c					\
 		 draw_vector.c
 
 OFILES = $(CFILES:.c=.o)
