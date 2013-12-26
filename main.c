@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 05:01:28 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 23:42:56 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/26 18:53:35 by kube             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,19 @@
 
 static int		key_hook(int keycode, t_env *env)
 {
-	if (keycode == 65507)
+	printf("%d\n", keycode);
+	if (keycode == 65307)
 		exit(0);
+	if (keycode == 113)
+		env->antialiased = 1 - env->antialiased;
+	if (keycode == 104)
+		env->horizon = 1 - env->horizon;
+	if (keycode == 103)
+		env->horizon_z = env->horizon_z - 50;
+	if (keycode == 106)
+		env->horizon_z = env->horizon_z + 50;
 	if (keycode == 98)
-		env->blured = 1 - env->blured;
+		env->blured = (env->blured + 1) % 3;
 	if (keycode == 65363)
 	{
 		if (env->rotation == -1)
@@ -52,14 +61,15 @@ static void		display_all_vectors(t_env *env, float angle,
 	while (env->map[y])
 	{
 		x = 0;
-		while (env->map[y][x])
+		while (env->map[y] && env->map[y][x])
 		{
-			if (env->map[y][x + 1])
+			if (env->map[y][x + 1] && x < 18)
 			{
-				load_vector(&cache_vector, env->map[y][x], env->map[y][x +1], center);
+				// printf("%d . %d\n", y, x);
+				load_vector(&cache_vector, env->map[y][x], env->map[y][x + 1], center);
 				display_vector(env, cache_vector, angle);
 			}
-				if (env->map[y + 1] && env->map[y + 1][x])
+			if (env->map[y + 1] && env->map[y + 1][x])
 			{
 				load_vector(&cache_vector, env->map[y][x], env->map[y + 1][x], center);
 				display_vector(env, cache_vector, angle);
@@ -70,15 +80,32 @@ static void		display_all_vectors(t_env *env, float angle,
 	}
 }
 
+static void		get_fps()
+{
+	static int		i = 0;
+	static float	last_put = 0;
+	float			time_ms;
+
+	i++;
+	time_ms = ((float)clock() / (float)CLOCKS_PER_SEC);
+	if (time_ms - last_put > 1)
+	{
+		printf("%d FPS\n", i);
+		last_put = time_ms;
+		i = 0;
+	}
+}
+
 static int		expose_hook(t_env *env)
 {
-	if (env->blured)
+	if (env->blured == 1)
 		fade(env, 0x000000, 0.09);
-	else
+	else if (env->blured == 0)
 		clear(env);
 	display_all_vectors(env, env->angle, &env->center);
 	mlx_put_image_to_window(env->mlx, env->win, env->img, 0, 0);
 	env->angle += 0.63 * env->rotation;
+	get_fps();
 	return (0);
 }
 
@@ -97,7 +124,9 @@ int				main(int argc, char **argv)
 		env.blured = 1;
 		env.horizon = 1;
 		env.rotation = 1;
-		env.angle_x = 
+		env.horizon_z = 1000;
+		env.antialiased = 1;
+		env.angle_x = -PI - 0.5;
 		env.center.x = 8.5;
 		env.center.y = 5.5;
 		mlx_expose_hook(env.win, expose_hook, &env);

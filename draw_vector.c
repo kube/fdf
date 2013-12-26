@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_vector.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/18 17:27:34 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 22:09:08 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/25 01:51:52 by kube             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static void	draw_loop_y(t_env *env, t_point *start, t_point *end, u_grad grad)
 	float	derivative;
 	float	proportion;
 	t_point	current;
+	int		color;
 
 	current.x = start->x;
 	current.y = start->y;
@@ -72,14 +73,16 @@ static void	draw_loop_y(t_env *env, t_point *start, t_point *end, u_grad grad)
 	while ((int)current.y <= (int)end->y)
 	{
 		proportion = (current.y - start->y) / (end->y - start->y);
-		pixel_to_image(env, current,
-				blend_colors(grad.color1, grad.color2, proportion),
-				current.x - (int)current.x);
-		current.x--;
-		pixel_to_image(env, current,
-				blend_colors(grad.color1, grad.color2, proportion),
-				1 - (current.x - (int)current.x));
-		current.x++;
+		color = blend_colors(grad.color1, grad.color2, proportion);
+		if (env->antialiased)
+		{
+			pixel_to_image(env, current, color, current.x - (int)current.x);
+			current.x--;
+			pixel_to_image(env, current, color, 1 - (current.x - (int)current.x));
+			current.x++;
+		}
+		else
+			pixel_to_image(env, current, color, 1);
 		current.x = current.x + derivative;
 		current.y = current.y + 1;
 	}

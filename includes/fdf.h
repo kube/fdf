@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/16 21:58:14 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 23:43:20 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/26 23:36:35 by kube             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@
 # include <libft.h>
 # include <get_next_line.h>
 
+# include <stdio.h>
+# include <time.h>
+
 # define WIN_HEIGHT 920
 # define WIN_WIDTH 1220
-# define MAX_HORIZON_Z 1000
+# define LIMITED_DEV_COS_SIN 6
 
 typedef struct			s_point
 {
@@ -57,9 +60,11 @@ typedef	struct			s_env
 	int					size_line;
 	int					endian;
 	int					*data;
-	float				angle;					
+	float				angle;
+	int					antialiased;				
 	int					blured;
 	int					horizon;
+	float				horizon_z;
 	int					rotation;
 	float				angle_x;
 	t_point				***map;
@@ -85,7 +90,7 @@ void		scale(t_vector *cache, float coeff);
 t_point		***get_map_data(char *file_name);
 void		load_vector(t_vector *cache, t_point *a, t_point *b, t_point *center);
 int			get_color_from_z(float z);
-void		horizon_point(t_vector *vector);
+void		horizon_point(t_vector *vector, float horizon_z);
 void		display_vector(t_env *env, t_vector vector, float angle);
 void		fade(t_env *env, int color, float coeff);
 void		clear(t_env *env);

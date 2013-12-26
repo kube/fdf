@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display_vector.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/22 23:34:09 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/22 23:34:28 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2013/12/25 02:11:01 by kube             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void		load_vector(t_vector *cache, t_point *a, t_point *b,
 							t_point *center)
 {
+	// printf("%p\n", a);
+	// printf("%p\n", b);
 	cache->a->x = a->x - center->x;
 	cache->a->y = a->y - center->y;
 	cache->a->z = a->z;
@@ -38,19 +40,19 @@ int			get_color_from_z(float z)
 		return blend_colors(0xCC0099, 0x3399FF, coeff);
 }
 
-void		horizon_point(t_vector *vector)
+void		horizon_point(t_vector *vector, float horizon_z)
 {
 	float		coeff;
 	t_point		horizon;
 
 	horizon.x = WIN_WIDTH / 2;
 	horizon.y = WIN_HEIGHT / 2;
-	coeff = vector->a->z / MAX_HORIZON_Z;
+	coeff = vector->a->z / horizon_z;
 	if (coeff > 1)
 		coeff = 1;
 	vector->a->x = (1 - coeff) * vector->a->x + coeff * horizon.x;
 	vector->a->y = (1 - coeff) * vector->a->y + coeff * horizon.y;
-	coeff = vector->b->z / MAX_HORIZON_Z;
+	coeff = vector->b->z / horizon_z;
 	if (coeff > 1)
 		coeff = 1;
 	vector->b->x = (1 - coeff) * vector->b->x + coeff * horizon.x;
@@ -62,13 +64,13 @@ void		display_vector(t_env *env, t_vector vector, float angle)
 	int			color1;
 	int			color2;
 
-	(void)horizon_point;
 	color1 = get_color_from_z(vector.a->z);
 	color2 = get_color_from_z(vector.b->z);
 	rotate_z_axis(&vector, angle / 100);
 	rotate_x_axis(&vector, env->angle_x);
 	scale(&vector, 40);
 	translation(&vector, 600, 400, 0);
-	horizon_point(&vector);
+	if (env->horizon)
+		horizon_point(&vector, env->horizon_z);
 	draw_vector(env, vector, color1, color2);
 }
