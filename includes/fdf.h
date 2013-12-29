@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/16 21:58:14 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/26 23:36:35 by kube             ###   ########.fr       */
+/*   Updated: 2013/12/29 09:54:46 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef	union
 }						u_grad;
 
 void		draw_vector(t_env *env, t_vector vect, int color1, int color2);
+void		draw_aa_vector(t_env *env, t_vector vect, int color1, int color2);
 int			blend_colors(int color1, int color2, float coeff);
 void		rotate_z_axis(t_vector *cache, float angle_z);
 void		rotate_x_axis(t_vector *cache, float angle_x);

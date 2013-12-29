@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fade.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/22 23:35:48 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/26 18:45:02 by kube             ###   ########.fr       */
+/*   Updated: 2013/12/27 20:59:09 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void		fade(t_env *env, int color, float coeff)
 {
-	int			i;
+	int		i;
 
 	i = 0;
 	while (i < WIN_WIDTH * WIN_HEIGHT)
@@ -27,8 +27,8 @@ void		fade(t_env *env, int color, float coeff)
 
 void		clear(t_env *env)
 {
-	int			i;
-
+	int		i;
+	
 	i = 0;
 	while (i < WIN_WIDTH * WIN_HEIGHT)
 	{

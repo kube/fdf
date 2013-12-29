@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kube <kube@student.42.fr>                  +#+  +:+       +#+         #
+#    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2013/12/26 23:45:08 by kube             ###   ########.fr        #
+#    Updated: 2013/12/28 18:57:38 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-INCLUDEFOLDER = -I/usr/X11/include -I./includes/ -I./libft/includes/
-LIBFOLDER = -L./libft/ -L/usr/X11/lib/ -L/usr/X11/include -L/usr/include/X11
+INCLUDEFOLDER = -I./includes/ -I./libft/includes/
+LIBFOLDER = -L./libft/ -L/usr/X11/lib/ -L/usr/X11/include
 LIBS = -lmlx -lXext -lX11 -lft
 CFLAGS = -g -Wall -Werror -Wextra -O4
 
@@ -25,6 +25,7 @@ CFILES = main.c					\
 		 display_vector.c		\
 		 fade.c					\
 		 cossin.c				\
+		 draw_aa_vector.c		\
 		 draw_vector.c
 
 OFILES = $(CFILES:.c=.o)

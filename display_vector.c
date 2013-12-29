@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display_vector.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/22 23:34:09 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/25 02:11:01 by kube             ###   ########.fr       */
+/*   Updated: 2013/12/28 18:55:07 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 void		load_vector(t_vector *cache, t_point *a, t_point *b,
 							t_point *center)
 {
-	// printf("%p\n", a);
-	// printf("%p\n", b);
 	cache->a->x = a->x - center->x;
 	cache->a->y = a->y - center->y;
 	cache->a->z = a->z;
@@ -72,5 +70,8 @@ void		display_vector(t_env *env, t_vector vector, float angle)
 	translation(&vector, 600, 400, 0);
 	if (env->horizon)
 		horizon_point(&vector, env->horizon_z);
-	draw_vector(env, vector, color1, color2);
+	if (env->antialiased)
+		draw_aa_vector(env, vector, color1, color2);
+	else
+		draw_vector(env, vector, color1, color2);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kube <kube@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 05:01:28 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/26 18:53:35 by kube             ###   ########.fr       */
+/*   Updated: 2013/12/27 22:37:46 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,19 @@ static void		display_all_vectors(t_env *env, float angle,
 		x = 0;
 		while (env->map[y] && env->map[y][x])
 		{
-			if (env->map[y][x + 1] && x < 18)
+			if (env->map[y][x + 1])
 			{
-				// printf("%d . %d\n", y, x);
 				load_vector(&cache_vector, env->map[y][x], env->map[y][x + 1], center);
 				display_vector(env, cache_vector, angle);
 			}
 			if (env->map[y + 1] && env->map[y + 1][x])
 			{
 				load_vector(&cache_vector, env->map[y][x], env->map[y + 1][x], center);
+				display_vector(env, cache_vector, angle);
+			}
+			if (env->map[y + 1] && env->map[y + 1][x + 1])
+			{
+				load_vector(&cache_vector, env->map[y][x], env->map[y + 1][x + 1], center);
 				display_vector(env, cache_vector, angle);
 			}
 			x++;
@@ -99,7 +103,7 @@ static void		get_fps()
 static int		expose_hook(t_env *env)
 {
 	if (env->blured == 1)
-		fade(env, 0x000000, 0.09);
+		fade(env, 0x000000, 0.04);
 	else if (env->blured == 0)
 		clear(env);
 	display_all_vectors(env, env->angle, &env->center);
