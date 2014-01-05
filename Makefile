@@ -6,40 +6,38 @@
 #    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2013/12/28 18:57:38 by cfeijoo          ###   ########.fr        #
+#    Updated: 2014/01/05 16:29:49 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-INCLUDEFOLDER = -I./includes/ -I./libft/includes/
-LIBFOLDER = -L./libft/ -L/usr/X11/lib/ -L/usr/X11/include
-LIBS = -lmlx -lXext -lX11 -lft
+
+INCLUDEFOLDERS = -I./includes/ -I./libft/includes/ -I./guava/includes/
+LIBFOLDERS = -L./guava/ -L./libft/ -L/usr/X11/lib/ -L/usr/X11/include
+LIBS =  -lft -lmlx -lXext -lX11 -lguava
+
+CC = cc
 CFLAGS = -g -Wall -Werror -Wextra -O4
 
-CC = gcc
-CFILES = main.c					\
-		 blend_colors.c			\
-		 transformations.c		\
-		 get_map_data.c			\
-		 get_next_line.c		\
-		 display_vector.c		\
-		 fade.c					\
-		 cossin.c				\
-		 draw_aa_vector.c		\
-		 draw_vector.c
+CFILES = main.c
 
 OFILES = $(CFILES:.c=.o)
 
-$(NAME) :
-	$(CC) -c $(CFILES) $(INCLUDEFOLDER) $(LIBFOLDER) $(LIBS) $(CFLAGS)
-	$(CC) $(OFILES) $(INCLUDEFOLDER) $(LIBFOLDER) $(LIBS) $(CFLAGS) -o $(NAME)
+all: $(NAME)
 
-updatelib :
+$(NAME) :
+	$(CC) -c $(CFILES) $(INCLUDEFOLDERS) $(CFLAGS)
+	$(CC) $(OFILES) $(INCLUDEFOLDERS) $(LIBFOLDERS) $(LIBS) $(CFLAGS) -o $(NAME)
+
+updatelibs :
 	cd libft/ && git pull
 	make -C libft/ re
+	cd guava/ && git pull
+	make -C guava/ re
 
-complib :
+complibs :
 	make -C libft/ re
+	make -C guava/ re
 
 clean :
 	rm -f $(OFILES)
@@ -47,4 +45,4 @@ clean :
 fclean : clean
 	rm -f $(NAME)
 
-re : fclean $(NAME)
+re : fclean all

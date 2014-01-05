@@ -6,13 +6,14 @@
 /*   By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/28 05:01:28 by cfeijoo           #+#    #+#             */
-/*   Updated: 2013/12/27 22:37:46 by cfeijoo          ###   ########.fr       */
+/*   Updated: 2014/01/05 16:39:51 by cfeijoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fdf.h>
+#include "/opt/X11/include/X11/X.h"
 
-static int		key_hook(int keycode, t_env *env)
+static int		keypress_hook(int keycode, t_env *env)
 {
 	printf("%d\n", keycode);
 	if (keycode == 65307)
@@ -28,24 +29,28 @@ static int		key_hook(int keycode, t_env *env)
 	if (keycode == 98)
 		env->blured = (env->blured + 1) % 3;
 	if (keycode == 65363)
-	{
-		if (env->rotation == -1)
-			env->angle -= 4;
-		env->rotation = -1;
-	}
+		env->pressed_keys.left = 1;
 	if (keycode == 65361)
-	{
-		if (env->rotation == 1)
-			env->angle += 4;
-		env->rotation = 1;
-	}
+		env->pressed_keys.right = 1;
 	if (keycode == 65362)
-		env->angle_x += 0.4;
+		env->pressed_keys.up = 1;
 	if (keycode == 65364)
-		env->angle_x -= 0.4;
+		env->pressed_keys.down = 1;
 	return (0);
 }
 
+static int		keyrelease_hook(int keycode, t_env *env)
+{
+	if (keycode == 65363)
+		env->pressed_keys.left = 0;
+	if (keycode == 65361)
+		env->pressed_keys.right = 0;
+	if (keycode == 65362)
+		env->pressed_keys.up = 0;
+	if (keycode == 65364)
+		env->pressed_keys.down = 0;
+	return (0);
+}
 static void		display_all_vectors(t_env *env, float angle,
 									t_point *center)
 {
@@ -84,11 +89,11 @@ static void		display_all_vectors(t_env *env, float angle,
 	}
 }
 
-static void		get_fps()
+static void				get_fps()
 {
-	static int		i = 0;
-	static float	last_put = 0;
-	float			time_ms;
+	static int			i = 0;
+	static float		last_put = 0;
+	float				time_ms;
 
 	i++;
 	time_ms = ((float)clock() / (float)CLOCKS_PER_SEC);
@@ -100,8 +105,24 @@ static void		get_fps()
 	}
 }
 
-static int		expose_hook(t_env *env)
+static int				expose_hook(t_env *env)
 {
+	if (env->pressed_keys.left)
+	{
+		if (env->rotation == -1)
+			env->angle -= 2;
+		env->rotation = -1;
+	}
+	if (env->pressed_keys.right)
+	{
+		if (env->rotation == 1)
+			env->angle += 2;
+		env->rotation = 1;
+	}
+	if (env->pressed_keys.up)
+		env->angle_x += 0.08;
+	if (env->pressed_keys.down)
+		env->angle_x -= 0.08;
 	if (env->blured == 1)
 		fade(env, 0x000000, 0.04);
 	else if (env->blured == 0)
@@ -113,9 +134,21 @@ static int		expose_hook(t_env *env)
 	return (0);
 }
 
-int				main(int argc, char **argv)
+static t_pressed_keys	init_pressed_keys()
 {
-	t_env		env;
+	t_pressed_keys		pressed_keys;
+
+	pressed_keys.up = 0;
+	pressed_keys.down = 0;
+	pressed_keys.left = 0;
+	pressed_keys.right = 0;
+	return (pressed_keys);
+}
+
+int						main(int argc, char **argv)
+{
+	t_env				env;
+
 
 	if (argc == 2)
 	{
@@ -124,6 +157,7 @@ int				main(int argc, char **argv)
 		env.win = mlx_new_window(env.mlx, WIN_WIDTH, WIN_HEIGHT, "42");
 		env.img = mlx_new_image(env.mlx, WIN_WIDTH, WIN_HEIGHT);
 		env.data = (int*)mlx_get_data_addr(env.img, &(env.bpp), &(env.size_line), &(env.endian));
+		env.pressed_keys = init_pressed_keys();
 		env.angle = 0;
 		env.blured = 1;
 		env.horizon = 1;
@@ -134,7 +168,8 @@ int				main(int argc, char **argv)
 		env.center.x = 8.5;
 		env.center.y = 5.5;
 		mlx_expose_hook(env.win, expose_hook, &env);
-		mlx_key_hook(env.win, key_hook, &env);
+		mlx_hook(env.win, KeyPress, KeyPressMask, keypress_hook, &env);
+		mlx_hook(env.win, KeyRelease, KeyReleaseMask, keyrelease_hook, &env);
 		mlx_loop_hook(env.mlx, expose_hook, &env);
 		mlx_loop(env.mlx);
 	}
