@@ -6,7 +6,7 @@
 #    By: cfeijoo <cfeijoo@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/28 05:03:25 by cfeijoo           #+#    #+#              #
-#    Updated: 2014/01/05 16:29:49 by cfeijoo          ###   ########.fr        #
+#    Updated: 2014/01/11 17:20:15 by cfeijoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,10 @@ LIBFOLDERS = -L./guava/ -L./libft/ -L/usr/X11/lib/ -L/usr/X11/include
 LIBS =  -lft -lmlx -lXext -lX11 -lguava
 
 CC = cc
-CFLAGS = -g -Wall -Werror -Wextra -O4
+CFLAGS = -Wall -Werror -Wextra
 
-CFILES = main.c
+CFILES =	main.c			\
+			get_map_data.c
 
 OFILES = $(CFILES:.c=.o)
 
